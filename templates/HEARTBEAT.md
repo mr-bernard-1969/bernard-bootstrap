@@ -14,3 +14,13 @@
 - Late night (23:00-08:00 local): HEARTBEAT_OK unless urgent
 - Don't reach out unless something actually matters
 - Update heartbeat-state.json after each check
+
+## Tips
+- Batch similar periodic checks into heartbeats instead of creating multiple cron jobs
+- Use cron for precise schedules and standalone tasks
+- Track check timestamps in `memory/heartbeat-state.json`:
+  ```json
+  {"lastChecks": {"email": 1703275200, "calendar": 1703260800}}
+  ```
+- Periodically (every few days) use a heartbeat for memory maintenance:
+  review recent daily notes, extract durable info, update MEMORY.md, prune stale entries

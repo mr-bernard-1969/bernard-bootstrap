@@ -16,6 +16,14 @@ Every entry here cost real time, real frustration, or real downtime. Learn from 
 **What happened:** Config was invalid, gateway wouldn't restart, no automatic rollback.
 **Lesson:** Always validate config first, keep a backup, auto-rollback on failure. Script it.
 
+### Injecting invalid JavaScript into server files
+**What happened:** A security hardening subagent added `// CORS handled globally` comments inside JSON object literals in server.js, crashing the entire web server.
+**Lesson:** Audit subagent changes to running services carefully. Review diffs before restarting. Comments inside `{...spread, // comment}` are syntax errors.
+
+### Free model fallback chain
+**What happened:** Primary API credits exhausted, system fell back to free OpenRouter models that couldn't use tools. 20 minutes of garbage output, broken sessions.
+**Lesson:** NEVER fall back to free models. They can't use tools and produce unusable output. Fallback must stay within the same capable provider tier (e.g., `anthropic/claude-sonnet-4-5` as fallback for Opus).
+
 ## 🟡 Painful (wasted time or caused confusion)
 
 ### Leaking system messages into group chats
@@ -38,6 +46,22 @@ Every entry here cost real time, real frustration, or real downtime. Learn from 
 **What happened:** Contradictory facts accumulated, causing confusion.
 **Lesson:** When a fact changes, REPLACE the old entry. Log the change in the daily note.
 
+### Sending internal commentary to the wrong person
+**What happened:** Agent processed a stranger's message, put analysis/commentary in the plain-text reply — which routed directly TO the stranger instead of to the human.
+**Lesson:** Your reply goes to the SENDER. Use the message tool with explicit target to route to different recipients.
+
+### Using wrong JSON field names for APIs
+**What happened:** Set `audio` instead of `audioUrl` on a debate entry. Renderer silently ignored it — no errors, just missing feature.
+**Lesson:** Always check how existing working entries are structured before adding new ones. Copy field names from working examples, don't guess.
+
+### Secrets in version-controlled files
+**What happened:** Auth passphrase was stored in SOUL.md, which was pushed to GitHub.
+**Lesson:** Secrets go in `.env` files only. Reference them by env var name in code and docs. Never commit secrets, even temporarily.
+
+### Overwriting files without checkpointing
+**What happened:** A good version of a page was overwritten before committing. Had to recover from session transcript JSONL archaeology.
+**Lesson:** Always `git commit` BEFORE iterating. Tag important versions. Cheap insurance.
+
 ## 🟢 Minor (inefficiencies)
 
 ### Not reading yesterday's daily note on session start
@@ -59,3 +83,11 @@ Every entry here cost real time, real frustration, or real downtime. Learn from 
 ### Whisper for telephony audio
 **What happened:** Whisper can't handle 8kHz telephony audio well.
 **Lesson:** Use Deepgram for telephony (8kHz PCMU). Whisper is for higher-quality audio.
+
+### Using OpenClaw cron for deterministic tasks
+**What happened:** Cron jobs would read instructions, say "I'll do these steps," then output markdown code blocks instead of actually calling tools. Failed silently for days.
+**Lesson:** System crontab (`crontab -e`) for anything deterministic. OpenClaw cron isolated sessions have a known issue where tools may not be provided to models. Use pure bash scripts for deterministic workflows.
+
+### LLM for plumbing tasks
+**What happened:** Used agent sessions for health checks, file syncs, and API calls that could be direct scripts.
+**Lesson:** LLMs are for judgment calls (synthesis, analysis, creative work). Everything else should be a script, cron job, or direct API call. Tokens cost money; `curl` doesn't.

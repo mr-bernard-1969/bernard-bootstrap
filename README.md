@@ -22,50 +22,74 @@ A bootstrap kit that takes a fresh OpenClaw install and gives it:
 ## Quick Start
 
 ```bash
-# 1. Install OpenClaw (if you haven't)
-npm install -g openclaw
-
-# 2. Clone this repo
-git clone https://github.com/mr-bernard-1969/bernard-bootstrap.git
+git clone https://github.com/<your-username>/bernard-bootstrap.git
 cd bernard-bootstrap
-
-# 3. Run the bootstrap
 bash setup.sh
 ```
 
-The setup script will:
-1. Create the workspace directory structure
-2. Copy template files (you'll customize them)
-3. Set up memory scaffolding
-4. Configure heartbeat basics
-5. Print next steps for manual configuration
+Then customize:
+1. Edit `SOUL.md` — give your agent a personality
+2. Edit `USER.md` — tell it about yourself
+3. Edit `IDENTITY.md` — name, backstory, operational persona
+4. Read the playbook files in `playbook/` for best practices
 
-## Repository Structure
+## Structure
 
 ```
-├── README.md                  # You're here
-├── setup.sh                   # Bootstrap script
-├── templates/                 # Core workspace templates
-│   ├── SOUL.md               # Persona template
-│   ├── IDENTITY.md           # Identity template
-│   ├── AGENTS.md             # Operational rules
-│   ├── USER.md               # Human profile template
-│   ├── HEARTBEAT.md          # Heartbeat task rotation
-│   └── TOOLS.md              # Tool notes template
-├── playbook/                  # Operational knowledge
-│   ├── memory-discipline.md  # How to maintain memory properly
-│   ├── communication.md      # When to speak, when to stay silent
-│   ├── error-recovery.md     # Gateway restarts, SSH safety, rollbacks
-│   ├── security.md           # Access control, secret handling
-│   └── anti-patterns.md      # Every mistake to avoid
-└── skills/                    # Skills installation guide
-    └── manifest.md           # What to install, in what order
+bernard-bootstrap/
+├── README.md                    ← You are here
+├── setup.sh                     ← One-shot workspace setup
+├── templates/
+│   ├── AGENTS.md                ← Workspace rules, memory habits, efficiency principles
+│   ├── SOUL.md                  ← Personality and core values
+│   ├── IDENTITY.md              ← Name, backstory, operational persona
+│   ├── USER.md                  ← Template for describing your human
+│   ├── HEARTBEAT.md             ← Periodic check configuration
+│   └── TOOLS.md                 ← Service and integration notes
+├── playbook/
+│   ├── memory-discipline.md     ← The #1 thing to get right
+│   ├── security.md              ← Access control, secrets, public persona
+│   ├── communication.md         ← When to speak, when to shut up, routing rules
+│   ├── error-recovery.md        ← Gateway, SSH, config, service recovery
+│   └── anti-patterns.md         ← Every mistake already made (save yourself the pain)
+└── skills/
+    └── manifest.md              ← Phased skill installation guide
 ```
 
-## Philosophy
+## Key Principles
 
-The best AI assistant isn't the one with the most tools — it's the one that knows when to use them, when to stay quiet, and how to recover when things go wrong. This bootstrap gives your agent that judgment from day one.
+These are the most important lessons from production:
 
-## License
+1. **Write-through memory** — If you learn something, write it to a file immediately. "Mental notes" don't survive restarts.
+2. **Machine-to-machine first** — If a task can be a bash script or cron job, don't route it through an LLM. Reserve tokens for judgment calls.
+3. **Scripts > LLM for plumbing** — Health checks, file syncs, API calls, notifications = pure scripts. Zero LLM involvement.
+4. **System crontab for deterministic tasks** — OpenClaw cron isolated sessions have a known bug where tools may not be provided to models. Use `crontab -e` for anything that doesn't need LLM judgment.
+5. **Never auto-harden** — Always propose security changes and get approval. Never lock yourself out.
+6. **Fallback within tier** — If your primary API key runs out, fall back to another key on the same provider. Never fall back to free/incapable models.
+7. **Checkpoint before iterating** — Git commit before making changes. Tag important versions. Cheap insurance.
+8. **Groups see only final output** — No progress updates, no system messages, no errors. Deliver the finished product.
 
-MIT — use it, fork it, make it yours.
+## Changelog
+
+### v2 (2026-02-26)
+- Added machine-to-machine efficiency principle to AGENTS.md
+- Added pipeline auto-continuation rules
+- Added routing rule (reply goes to sender, not human)
+- Added cron isolated session tools bug to anti-patterns
+- Added free model fallback chain anti-pattern
+- Added subagent code injection anti-pattern
+- Added secrets-in-git anti-pattern
+- Added field name mismatch anti-pattern
+- Added overwriting-without-checkpoint anti-pattern
+- Added system vs OpenClaw cron guidance
+- Added API credit/auth recovery to error-recovery
+- Added cron job debugging to error-recovery
+- Added restart context pattern to memory-discipline
+- Added MEMORY.md security rule (main session only)
+- Added channel parity rule to security
+- Added emergency contact protocol to security
+- Added routing rule to communication
+- Updated heartbeat template with tips and memory maintenance
+
+### v1 (2026-02-22)
+- Initial release: templates, playbook, setup script, skills manifest
