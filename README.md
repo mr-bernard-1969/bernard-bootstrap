@@ -21,6 +21,8 @@ A bootstrap kit that takes a fresh OpenClaw install and gives it:
 
 ## Quick Start
 
+### Option A: Manual Setup (You Have a VPS Already)
+
 ```bash
 git clone https://github.com/<your-username>/bernard-bootstrap.git
 cd bernard-bootstrap
@@ -33,12 +35,34 @@ Then customize:
 3. Edit `IDENTITY.md` — name, backstory, operational persona
 4. Read the playbook files in `playbook/` for best practices
 
+### Option B: Full VPS Provisioning (Start from Scratch)
+
+If you need to spin up a fresh VPS and install everything:
+
+```bash
+# On your local machine or existing server:
+bash provision/provision-vps.sh <VPS_IP> <SSH_KEY_PATH>
+```
+
+This will:
+- Create the `openclaw` user with proper permissions
+- Install Node.js, OpenClaw, and dependencies
+- Run the bootstrap setup
+- Configure systemd services
+- Set up firewall basics
+
+See `provision/README.md` for cloud provider-specific instructions (Hetzner, DigitalOcean, etc.).
+
 ## Structure
 
 ```
 bernard-bootstrap/
 ├── README.md                    ← You are here
 ├── setup.sh                     ← One-shot workspace setup
+├── provision/
+│   ├── README.md                ← VPS provisioning guide
+│   ├── provision-vps.sh         ← Automated VPS setup script
+│   └── setup-telegram-bot.md   ← Telegram bot creation guide
 ├── templates/
 │   ├── AGENTS.md                ← Workspace rules, memory habits, efficiency principles
 │   ├── SOUL.md                  ← Personality and core values
@@ -70,6 +94,16 @@ These are the most important lessons from production:
 8. **Groups see only final output** — No progress updates, no system messages, no errors. Deliver the finished product.
 
 ## Changelog
+
+### v3 (2026-02-27)
+- Added `provision/` directory with automated VPS provisioning script
+- Added Telegram bot setup guide
+- Added SMS/voice channel handling patterns to AGENTS.md template
+- Added emergency contact protocol pattern to AGENTS.md template
+- Added heartbeat vs cron decision guide
+- Updated anti-patterns with subagent code injection, model size failures
+- Updated skills manifest with latest recommendations
+- Setup script now supports `--provision` flag for full VPS setup
 
 ### v2 (2026-02-26)
 - Added machine-to-machine efficiency principle to AGENTS.md

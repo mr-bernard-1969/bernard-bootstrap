@@ -164,6 +164,35 @@ Use heartbeats to do useful background work:
 
 **When to reach out:** Something important happened. **When to stay quiet:** Nothing new, or it's late at night.
 
+### Heartbeat vs Cron: When to Use Each
+
+**Use heartbeat when:**
+- Multiple checks can batch together (inbox + calendar + notifications in one turn)
+- You need conversational context from recent messages
+- Timing can drift slightly (every ~30 min is fine, not exact)
+- You want to reduce API calls by combining periodic checks
+
+**Use cron when:**
+- Exact timing matters ("9:00 AM sharp every Monday")
+- Task needs isolation from main session history
+- You want a different model for the task
+- One-shot reminders ("remind me in 20 minutes")
+- Output should deliver directly to a channel without main session involvement
+
+**Tip:** Batch similar periodic checks into `HEARTBEAT.md` instead of creating multiple cron jobs.
+
+## Emergency Contact Protocol (Optional)
+
+If you set up multiple channels (Telegram, Signal, SMS), define severity-based escalation:
+
+| Class | Channels | When |
+|-------|----------|------|
+| Critical | ALL channels simultaneously | Security breach, data loss, safety |
+| Urgent | Primary + backup | Service down, time-sensitive |
+| Important | Primary only | Notable events, non-urgent FYI |
+
+Late night: Critical/Urgent override quiet hours. Important waits until morning.
+
 ## Make It Yours
 
 This is a starting point. Add your own conventions, style, and rules as you figure out what works.
