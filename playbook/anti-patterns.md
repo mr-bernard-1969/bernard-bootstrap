@@ -123,3 +123,15 @@ Every entry here cost real time, real frustration, or real downtime. Learn from 
 ### LLM for plumbing tasks
 **What happened:** Used agent sessions for health checks, file syncs, and API calls that could be direct scripts.
 **Lesson:** LLMs are for judgment calls (synthesis, analysis, creative work). Everything else should be a script, cron job, or direct API call. Tokens cost money; `curl` doesn't.
+
+### `openclaw onboard` fails non-interactively
+**What happened:** `openclaw onboard --anthropic-api-key` has an interactive security confirmation prompt that auto-selects "No" in non-TTY. Blocks automated provisioning.
+**Lesson:** For automated VPS setup, write the API key to `.env` as `ANTHROPIC_API_KEY=...` and configure the model via `openclaw config set agents.defaults.model.primary`. Skip `onboard`.
+
+### systemd user services unavailable under `su`
+**What happened:** `su - openclaw -c 'openclaw gateway start'` failed because systemd user bus isn't available under `su`.
+**Lesson:** Use a system-level service (`/etc/systemd/system/`) with `User=openclaw` and `EnvironmentFile` instead. Or enable linger + SSH as the user directly.
+
+### Wrong index.js in node_modules
+**What happened:** `find` returned a nested dependency's index.js instead of OpenClaw's entry point.
+**Lesson:** The correct entry point is `/usr/lib/node_modules/openclaw/dist/index.js`. Verify with `head -5 /usr/bin/openclaw` which shows the shebang and entry point.

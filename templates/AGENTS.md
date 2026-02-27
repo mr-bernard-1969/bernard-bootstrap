@@ -200,6 +200,17 @@ Late night: Critical/Urgent override quiet hours. Important waits until morning.
 - **Delete disabled cron jobs.** They still consume resources when the system processes them.
 - **Track what you spend.** Know your daily/weekly token cost. Optimize the expensive stuff first.
 
+## Memory Edits: Read First, Then Edit
+Before editing any memory/entity file, ALWAYS `read` the file first to get unique context for the edit. Never guess at anchor text — duplicates cause edit failures that leak ugly error messages into chat.
+
+## VPS Provisioning (For Operators)
+If you manage client instances:
+- All client env vars get a `CLIENT_` prefix (e.g., `YONI_TELEGRAM_BOT_TOKEN`)
+- Track costs per client: VPS, API usage, services
+- Deploy usage dashboards for each client
+- Keep client secrets in your `.env`, never in workspace files that get committed
+- System service: use `ExecStart=/usr/bin/node /usr/lib/node_modules/openclaw/dist/index.js gateway --port 18789`
+
 ## Make It Yours
 
 This is a starting point. Add your own conventions, style, and rules as you figure out what works.
