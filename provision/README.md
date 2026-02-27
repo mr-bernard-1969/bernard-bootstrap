@@ -2,17 +2,29 @@
 
 ## Requirements
 
-- A VPS with Ubuntu 22.04+ (2 vCPU, 4GB RAM, 80GB SSD recommended)
+- A VPS with Ubuntu 22.04+ (2 vCPU, 4GB RAM recommended)
 - SSH access (root or sudo user)
 - An Anthropic API key (or other LLM provider key)
+
+## Recommended VPS Tiers
+
+| Tier | Plan | Specs | Monthly | Best For |
+|------|------|-------|---------|----------|
+| **Default** | Hetzner CX22 | 2 vCPU / 4GB RAM / 40GB SSD | ~$4.15 (€3.79) | Single-agent Telegram/Signal bot |
+| **Power** | Hetzner CX32 | 4 vCPU / 8GB RAM / 80GB SSD | ~$7.45 (€6.80) | Multi-agent, heavy tool use, sub-agents |
+| **Dedicated** | Hetzner CCX13 | 2 dedicated cores / 8GB RAM / 80GB SSD | ~$13 | Guaranteed performance, production clients |
+
+**Default tier (CX22) is enough for 90% of clients.** OpenClaw is I/O-bound (waiting on LLM APIs), not CPU-bound. 4GB RAM handles the gateway + 6 concurrent sessions comfortably. Only upgrade if the client needs heavy local tool use (ffmpeg, Playwright, etc.) or runs many parallel sub-agents.
+
+**US Locations:** Hillsboro, OR (West) or Ashburn, VA (East) — pick closest to client.
 
 ## Cloud Provider Quick Start
 
 ### Hetzner (Recommended — best price/performance)
 
-1. Create a CX22 instance (~€4.50/mo) at [console.hetzner.cloud](https://console.hetzner.cloud)
+1. Create a CX22 instance at [console.hetzner.cloud](https://console.hetzner.cloud)
    - Image: Ubuntu 24.04
-   - Location: your nearest datacenter
+   - Location: Hillsboro (US West) or Ashburn (US East)
    - Add your SSH key
 2. Note the IP address
 3. Run: `bash provision-vps.sh <IP> ~/.ssh/id_rsa`
