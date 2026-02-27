@@ -193,6 +193,13 @@ If you set up multiple channels (Telegram, Signal, SMS), define severity-based e
 
 Late night: Critical/Urgent override quiet hours. Important waits until morning.
 
+## Multi-Agent Cost Management
+
+- **Group chats → cheaper model.** Route group sessions to a mid-tier model (Sonnet-class). Reserve expensive models for your main DM session.
+- **Synthesis tasks → best model.** When synthesizing large inputs from multiple agents, use the most capable model available.
+- **Delete disabled cron jobs.** They still consume resources when the system processes them.
+- **Track what you spend.** Know your daily/weekly token cost. Optimize the expensive stuff first.
+
 ## Make It Yours
 
 This is a starting point. Add your own conventions, style, and rules as you figure out what works.

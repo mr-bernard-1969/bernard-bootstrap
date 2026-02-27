@@ -71,13 +71,15 @@ bernard-bootstrap/
 │   ├── HEARTBEAT.md             ← Periodic check configuration
 │   └── TOOLS.md                 ← Service and integration notes
 ├── playbook/
-│   ├── memory-discipline.md     ← The #1 thing to get right
-│   ├── security.md              ← Access control, secrets, public persona
-│   ├── communication.md         ← When to speak, when to shut up, routing rules
-│   ├── error-recovery.md        ← Gateway, SSH, config, service recovery
-│   └── anti-patterns.md         ← Every mistake already made (save yourself the pain)
+│   ├── memory-discipline.md         ← The #1 thing to get right
+│   ├── security.md                  ← Access control, secrets, API keys, Cloudflare, watchdogs
+│   ├── communication.md             ← Speaking, routing, voice, social media, email outreach
+│   ├── error-recovery.md            ← Gateway, SSH, services, credits, webhooks, remote machines
+│   ├── anti-patterns.md             ← Every mistake already made (30+ entries)
+│   ├── subagent-orchestration.md    ← Fan-out/synthesis, pipeline state, cost awareness
+│   └── web-services.md             ← Dashboards, auth, APIs, systemd, nginx, Playwright
 └── skills/
-    └── manifest.md              ← Phased skill installation guide
+    └── manifest.md                  ← 5-phase skill installation guide
 ```
 
 ## Key Principles
@@ -92,8 +94,21 @@ These are the most important lessons from production:
 6. **Fallback within tier** — If your primary API key runs out, fall back to another key on the same provider. Never fall back to free/incapable models.
 7. **Checkpoint before iterating** — Git commit before making changes. Tag important versions. Cheap insurance.
 8. **Groups see only final output** — No progress updates, no system messages, no errors. Deliver the finished product.
+9. **Build a hallucination watchdog** — Automate checks for stale file paths, dead URLs, missing env vars. Run daily. Your docs WILL drift from reality.
+10. **Pipelines are autonomous after trigger** — Multi-step workflows auto-continue. Never make your human manually kick the next stage.
 
 ## Changelog
+
+### v3.1 (2026-02-28)
+- **NEW: `subagent-orchestration.md`** — fan-out/synthesis, pipeline state, model selection, cost awareness
+- **NEW: `web-services.md`** — vanilla JS dashboards, URL-param auth, SSE, systemd, nginx, Playwright
+- **Anti-patterns +8**: headless vs Cloudflare, CSS/GSAP conflicts, networkidle hangs, systemd PATH, Bot API webhooks, HEIC speed, C compiler deps, env var typos
+- **Error recovery +5**: port conflicts, credit exhaustion, webhook debugging, remote SSH, subagent timeouts
+- **Security +3**: API key management, Cloudflare tips, hallucination watchdog
+- **Communication +3**: voice messages, social media/Twitter, email outreach
+- **Skills manifest v2**: 5 phases, custom skills section, TTS options, himalaya tips
+- **Templates updated**: AGENTS.md (cost management), TOOLS.md (expanded sections)
+- **Key principles +2**: hallucination watchdog, autonomous pipelines
 
 ### v3 (2026-02-27)
 - Added `provision/` directory with automated VPS provisioning script

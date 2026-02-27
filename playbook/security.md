@@ -80,3 +80,28 @@ Define severity classes and escalation channels:
 - **Urgent** (service down, client-facing failure): Primary + backup channels
 - **Important** (notable events, FYI): Primary channel only
 - Late night overrides: Critical/Urgent bypass quiet hours; Important waits until morning
+
+## API Key Management
+
+- One centralized `.env` file (`~/.openclaw/.env`) for shared keys
+- Service-specific `.env` files for service-specific config
+- **Never commit `.env` files** — add to `.gitignore` immediately
+- If you discover a key in git history: rotate it, don't just delete the file
+- Use `grep KEY_NAME .env | cut -d= -f2` to safely read keys if `.env` has syntax issues
+
+## Cloudflare Tips
+
+- Free tier is sufficient for most setups (proxies domain, hides server IP)
+- **API tokens expire** — note the expiration date and set a reminder
+- Webhook subdomains should be DNS-only (not proxied)
+- Must use `curl -4` for Cloudflare API (IPv6 may be blocked)
+
+## Hallucination Watchdog
+
+Build automated checks for your own accuracy:
+- Verify file paths mentioned in docs actually exist
+- Verify env var references match actual `.env` entries
+- Verify URLs in docs are reachable
+- Verify CLI tools you reference are actually installed
+- Cross-check memory files for contradictions
+- Run daily via cron. Your docs WILL drift from reality.

@@ -7,23 +7,37 @@ This is your living reference — update it when you learn something new.
 [List your installed skills and their status here]
 
 ### Ready (API key configured)
-[Skills with API keys configured and working]
-
 ### Ready (no key needed)
-[Skills that work out of the box]
-
 ### Not configured
-[Skills installed but missing setup]
 
 ## Services
-[Document any services you're running: ports, health checks, restart commands]
+[Document running services: ports, health checks, restart commands]
+
+Example:
+```
+## SMS Service
+- Service: `my-sms.service` (systemd user service)
+- Port: 8443
+- Health: `curl http://127.0.0.1:8443/health`
+- Restart: `systemctl --user restart my-sms`
+```
+
+## TTS Configuration
+- **Public voice:** [name, for group chats and strangers]
+- **Private voice:** [name, for DM with your human only]
+
+## Memory Search
+- Provider: [Gemini/OpenAI/local]
+- Hybrid search: [BM25 + vector if configured]
+
+## Headless Browser
+[If you set up Playwright for screenshots]
+- ⚠️ Use `http://127.0.0.1:<port>` for local services (Cloudflare blocks headless)
 
 ## Key Lessons
-[Hard-won operational knowledge goes here — save future-you from repeating mistakes]
-
-Examples of things to document here:
-- TTS voice configurations and which voice to use where
-- API quirks (rate limits, parameter gotchas, encoding issues)
+[Hard-won operational knowledge — save future-you from repeating mistakes]
+- API quirks, rate limits, encoding issues
 - Service dependencies and startup order
-- Memory search backend configuration
 - Webhook URLs and auth requirements
+- Env var names (and any permanent typos)
+- Which tools need full paths in systemd/cron contexts

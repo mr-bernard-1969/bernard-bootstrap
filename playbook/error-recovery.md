@@ -109,3 +109,35 @@ When subagents break things (e.g., editing server files with invalid syntax):
 - Always review subagent changes to production services before restarting
 - Keep subagent work isolated to tmp/workspace files when possible
 - If a subagent crashes a service, check `git diff` or recent file modifications
+- If a subagent times out, check its output directory — it often completed work but timed out on the final message
+
+## Gateway Port Conflicts
+
+If `openclaw gateway start` fails with "address in use":
+1. Find what's holding the port: `ss -tlnp | grep <port>`
+2. Kill the stale process: `kill <pid>`
+3. Then restart normally
+
+## Anthropic Credit Exhaustion
+
+When credits run out mid-session:
+1. Switch auth order to put working profile first: `["backup", "default"]`
+2. Clear cooldown on exhausted profile so it auto-recovers when credits refill
+3. **Never add free models as fallback** — they can't use tools
+4. Restart gateway with new config
+
+## External Service Webhooks
+
+When webhooks stop working:
+1. Check the service is running: `systemctl --user status <service>`
+2. Check the port is listening: `curl http://127.0.0.1:<port>/health`
+3. Check DNS/proxy: webhook endpoints should be DNS-only (not Cloudflare-proxied)
+4. Check the webhook provider's dashboard for delivery failures
+
+## Remote Machine SSH
+
+If SSH to a remote machine fails:
+1. Check if the machine is online (ping)
+2. Try with verbose: `ssh -v user@host`
+3. Check authorized_keys on the remote end
+4. **Never change SSH config on a remote machine without a second session open**

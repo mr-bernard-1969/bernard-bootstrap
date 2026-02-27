@@ -62,6 +62,38 @@ Every entry here cost real time, real frustration, or real downtime. Learn from 
 **What happened:** A good version of a page was overwritten before committing. Had to recover from session transcript JSONL archaeology.
 **Lesson:** Always `git commit` BEFORE iterating. Tag important versions. Cheap insurance.
 
+### Headless browser blocked by Cloudflare
+**What happened:** Playwright headless mode was detected and blocked by Cloudflare on our own domain. Screenshots always returned challenge pages.
+**Lesson:** Use headed browser with off-screen window position (`--window-position=9999,9999`) + stealth plugin. Or use `http://127.0.0.1:<port>` to bypass Cloudflare entirely for your own services.
+
+### CSS conflicts with GSAP animations
+**What happened:** CSS rule `.card-enter { opacity: 0 }` conflicted with GSAP's `gsap.from({opacity: 0})`. Cards were permanently invisible because CSS applied first.
+**Lesson:** Don't set initial hidden states in CSS when GSAP controls the animation. Let GSAP own the full lifecycle.
+
+### networkidle hangs with SSE/long-poll
+**What happened:** Playwright `waitUntil: 'networkidle'` hung forever on pages with Server-Sent Events.
+**Lesson:** Use `domcontentloaded` for pages with persistent connections. `networkidle` requires ALL network activity to stop — SSE never stops.
+
+### systemd PATH doesn't include user bin directories
+**What happened:** `openclaw` command not found when called from systemd service.
+**Lesson:** Use full paths in systemd scripts: `/home/user/.npm-global/bin/openclaw`. Or set `Environment=PATH=...` in the service file.
+
+### Bot API getUpdates returns 404 with webhooks
+**What happened:** Tried `getUpdates` to discover chats, got 404. Bot was in webhook mode.
+**Lesson:** When webhooks are active, `getUpdates` is disabled. Use message logs as the primary data source.
+
+### HEIC encoding is extremely slow
+**What happened:** Full-resolution HEIC crops took ~60 seconds per crop, blocking the upload pipeline.
+**Lesson:** Store crop coordinates in metadata, serve JPEG web crops immediately, defer HEIC generation to background.
+
+### Dependencies requiring C compiler on minimal VPS
+**What happened:** `pyroomacoustics` and `audiomentations` failed — no C compiler on VPS.
+**Lesson:** Use `scipy` and `numpy` only (ship pre-built wheels). Anything needing compilation must run on a machine with build tools.
+
+### Env var typos are permanent
+**What happened:** `X_COMSUMER_SECRET` (missing N) was baked into `.env` and 5+ scripts before anyone noticed.
+**Lesson:** Once an env var name is in production across multiple scripts, document the typo rather than fix it everywhere.
+
 ## 🟢 Minor (inefficiencies)
 
 ### Not reading yesterday's daily note on session start
