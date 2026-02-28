@@ -96,6 +96,10 @@ su - openclaw -c '
     rm -rf /tmp/bernard-bootstrap
 '
 
+echo "--- Enabling systemd user services (linger) ---"
+loginctl enable-linger openclaw
+echo "   ✅ Linger enabled for openclaw user (systemd services persist after logout)"
+
 echo "--- Setting up firewall ---"
 ufw --force reset
 ufw default deny incoming
