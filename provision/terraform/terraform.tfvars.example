@@ -1,0 +1,31 @@
+# Copy this file to terraform.tfvars and fill in your values.
+# DO NOT commit terraform.tfvars — it contains secrets.
+
+# Identity
+instance_name = "bernard-1"
+domain        = "itookthese.com"
+
+# Hetzner (hetzner.com → project → API Tokens → Generate API token)
+hetzner_token   = "your-hetzner-token-here"
+server_type     = "cx22"
+server_location = "nbg1"
+
+# SSH (paste the CONTENTS of your public key file, not the file path)
+ssh_public_key       = "ssh-ed25519 AAAA... you@machine"
+ssh_private_key_path = "~/.ssh/id_ed25519"
+
+# Cloudflare (cloudflare.com → domain → Overview → Zone ID in right sidebar)
+cloudflare_api_token = "your-cloudflare-api-token"
+cloudflare_zone_id   = "your-zone-id-here"
+
+# Tailscale (tailscale.com/admin/settings/keys → Generate auth key)
+# The tailscale_api_key is used to generate a device auth key programmatically.
+# Requires tailnets:write scope.
+tailscale_api_key = "tskey-api-..."
+tailscale_tailnet = "-"
+tailscale_tag     = "tag:bernard-vps"
+
+# LiteLLM proxy (your existing proxy, reachable from VPS via Tailscale)
+litellm_base_url  = "http://100.127.63.22:4000"
+litellm_api_key   = "sk-local-litellm-key"
+litellm_model_id  = "claude-sonnet-4-6"
