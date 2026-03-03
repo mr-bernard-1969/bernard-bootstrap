@@ -9,6 +9,7 @@ domain        = "itookthese.com"
 hetzner_token   = "your-hetzner-token-here"
 server_type     = "cx22"
 server_location = "nbg1"
+server_image    = "ubuntu-24.04"
 
 # SSH (paste the CONTENTS of your public key file, not the file path)
 ssh_public_key       = "ssh-ed25519 AAAA... you@machine"
