@@ -31,7 +31,7 @@ npm install -g openclaw
 
 ### 4. Run bootstrap
 ```bash
-su - openclaw -c 'git clone https://github.com/mr-bernard-1969/bernard-bootstrap.git ~/bernard-bootstrap && cd ~/bernard-bootstrap && bash setup.sh'
+su - openclaw -c 'git clone https://github.com/mister-bernard/bernard-bootstrap.git ~/bernard-bootstrap && cd ~/bernard-bootstrap && bash setup.sh'
 ```
 
 ### 5. Configure auth

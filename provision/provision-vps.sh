@@ -90,7 +90,7 @@ su - openclaw -c '
     export PATH=$HOME/.npm-global/bin:$PATH
     cd /tmp
     if [ -d bernard-bootstrap ]; then rm -rf bernard-bootstrap; fi
-    git clone https://github.com/mr-bernard-1969/bernard-bootstrap.git
+    git clone https://github.com/mister-bernard/bernard-bootstrap.git
     cd bernard-bootstrap
     bash setup.sh
     rm -rf /tmp/bernard-bootstrap
