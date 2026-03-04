@@ -1,0 +1,8 @@
+.worktrees/
+provision/terraform/terraform.tfvars
+provision/terraform/.terraform/
+provision/terraform/.terraform.lock.hcl
+provision/terraform/terraform.tfstate
+provision/terraform/terraform.tfstate.backup
+provision/terraform/*.tfstate*
+provision/terraform/crash.log

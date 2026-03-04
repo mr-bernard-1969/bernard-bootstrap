@@ -35,23 +35,21 @@ Then customize:
 3. Edit `IDENTITY.md` — name, backstory, operational persona
 4. Read the playbook files in `playbook/` for best practices
 
-### Option B: Full VPS Provisioning (Start from Scratch)
+### Option B: Full VPS Provisioning (Terraform — Recommended)
 
-If you need to spin up a fresh VPS and install everything:
+One command creates everything: Hetzner VPS, DNS, Tailscale, HTTPS cert, OpenClaw configured.
 
 ```bash
-# On your local machine or existing server:
-bash provision/provision-vps.sh <VPS_IP> <SSH_KEY_PATH>
+cd provision/terraform
+cp terraform.tfvars.example terraform.tfvars
+# fill in your secrets
+terraform init && terraform apply
+terraform output gateway_url_https
 ```
 
-This will:
-- Create the `openclaw` user with proper permissions
-- Install Node.js, OpenClaw, and dependencies
-- Run the bootstrap setup
-- Configure systemd services
-- Set up firewall basics
+See `provision/terraform/README.md` for full instructions, prerequisites, and troubleshooting.
 
-See `provision/README.md` for cloud provider-specific instructions (Hetzner, DigitalOcean, etc.).
+**Manual script (alternative):** `provision/provision-vps.sh <VPS_IP> <SSH_KEY_PATH>` — useful if you already have a server and just need software setup.
 
 ## Structure
 
