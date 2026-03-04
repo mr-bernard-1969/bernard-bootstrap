@@ -80,8 +80,7 @@ ssh root@<server-ip> cat /tmp/provision.log
 ```
 Fix the issue, then reprovision:
 ```bash
-terraform taint hcloud_server.main
-terraform apply
+terraform apply -replace="hcloud_server.main"
 ```
 
 **Gateway not responding**

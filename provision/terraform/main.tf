@@ -55,7 +55,7 @@ resource "tailscale_preauthkey" "main" {
   reusable      = false
   ephemeral     = false
   preauthorized = true
-  expiry        = "1h"
+  expiry        = 3600
   tags          = [var.tailscale_tag]
 }
 
