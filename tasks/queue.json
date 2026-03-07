@@ -1,0 +1,223 @@
+{
+  "version": 2,
+  "tasks": [
+    {
+      "id": "t001",
+      "task": "Slow down cognitive.ch animation \u2014 change globalSpeed to 0.25 in bundle.js",
+      "priority": "med",
+      "status": "done",
+      "added": "2026-03-06T19:12:00Z",
+      "context": "G requested ~75% slower WebGL background",
+      "completed": "2026-03-07T13:19:13.197396+00:00"
+    },
+    {
+      "id": "t002",
+      "task": "Draft ATLAS prime outreach emails to Booz Allen, SAIC, Leidos SBLOs",
+      "priority": "med",
+      "status": "done",
+      "added": "2026-03-06T19:12:00Z",
+      "context": "Research done, need to write emails. See memory/2026-03-05.md",
+      "completed": "2026-03-07T13:19:13.293249+00:00"
+    },
+    {
+      "id": "t003",
+      "task": "Set up hello@cognitive.ch email",
+      "priority": "low",
+      "status": "done",
+      "added": "2026-03-06T19:12:00Z",
+      "context": "Need DNS/mailbox config. Blocked on knowing where cognitive.ch email is hosted | BLOCKED: waiting for DNS/hosting info",
+      "completed": "2026-03-07T13:19:13.386304+00:00"
+    },
+    {
+      "id": "t004",
+      "task": "Set up iMessage channel on Mac Mini once Apple ID is ready",
+      "priority": "high",
+      "status": "done",
+      "added": "2026-03-06T19:12:00Z",
+      "context": "G setting up Apple ID on phone. Need to sign into Messages.app + wire to OpenClaw",
+      "completed": "2026-03-07T13:19:13.457379+00:00"
+    },
+    {
+      "id": "t005",
+      "task": "Build /go/<code> QR scan tracking route in n-number.org server.js",
+      "priority": "med",
+      "status": "done",
+      "added": "2026-03-06T19:12:00Z",
+      "context": "Postcards arriving ~March 12-14, need tracking before then",
+      "completed": "2026-03-07T13:19:13.505172+00:00"
+    },
+    {
+      "id": "t006",
+      "task": "Whitelist VPS + Mac Mini IPs in CapSolver dashboard",
+      "priority": "low",
+      "status": "done",
+      "added": "2026-03-06T19:12:00Z",
+      "context": "5.78.178.126, 2a01:4ff:1f0:3f81::1, 38.23.53.65",
+      "completed": "2026-03-07T13:19:13.577728+00:00"
+    },
+    {
+      "id": "t007",
+      "task": "Generate remaining 6 Canadian citizenship document order instructions",
+      "priority": "med",
+      "status": "done",
+      "added": "2026-03-06T19:12:00Z",
+      "context": "WA birth, 2x CA birth, 3x death certs. See citizenship portal",
+      "completed": "2026-03-07T13:19:13.648768+00:00"
+    },
+    {
+      "id": "td7e701",
+      "task": "Task 1: Autonomous loop improvements - check status, fix reminder scheduling, integrate with heartbeat, improve decision criteria",
+      "priority": "med",
+      "status": "done",
+      "added": "2026-03-07T11:29:04.247094+00:00",
+      "context": "",
+      "completed": "2026-03-07T11:43:50.111778+00:00"
+    },
+    {
+      "id": "t6ae40f",
+      "task": "Task 3: macOS security audit tool - research/find/verify open source hardening tool",
+      "priority": "med",
+      "status": "pending",
+      "added": "2026-03-07T11:29:04.279842+00:00",
+      "context": ""
+    },
+    {
+      "id": "tb098b7",
+      "task": "Task 4: DeFi Committee upgrade proposal",
+      "priority": "med",
+      "status": "pending",
+      "added": "2026-03-07T11:29:04.311033+00:00",
+      "context": ""
+    },
+    {
+      "id": "t00304a",
+      "task": "Task 5: AI News email filtering - analyze tagged emails, build 8AM daily summary cron, flag reviewed",
+      "priority": "med",
+      "status": "pending",
+      "added": "2026-03-07T11:29:04.341461+00:00",
+      "context": ""
+    },
+    {
+      "id": "tb2c087",
+      "task": "Task 7: China itinerary page update - HK Mar 8-12, SZ meetings 11-12, hiking alternate routes",
+      "priority": "med",
+      "status": "pending",
+      "added": "2026-03-07T11:29:04.371787+00:00",
+      "context": ""
+    },
+    {
+      "id": "t07857a",
+      "task": "Task 11: Secure Enclave agent for Permanent Ventures fund - separate workspace, telegram bot or web chat",
+      "priority": "med",
+      "status": "pending",
+      "added": "2026-03-07T11:29:04.402150+00:00",
+      "context": ""
+    },
+    {
+      "id": "taf3626",
+      "task": "Task 12: Status page upgrades - client tracking tab, archive monitor, projects page, n-numbers QR tab",
+      "priority": "med",
+      "status": "pending",
+      "added": "2026-03-07T11:29:04.432972+00:00",
+      "context": ""
+    },
+    {
+      "id": "t674620",
+      "task": "Task 13: Client onboarding flow - API sharing model, bootstrap repo improvements",
+      "priority": "med",
+      "status": "pending",
+      "added": "2026-03-07T11:29:04.463211+00:00",
+      "context": ""
+    },
+    {
+      "id": "t22bee0",
+      "task": "Task 14: N-number.org system audit + Lob postcard status check",
+      "priority": "med",
+      "status": "pending",
+      "added": "2026-03-07T11:29:04.493023+00:00",
+      "context": ""
+    },
+    {
+      "id": "t34dd42",
+      "task": "Task 15: Propose additional useful tools for regular workflows",
+      "priority": "med",
+      "status": "pending",
+      "added": "2026-03-07T11:29:04.523066+00:00",
+      "context": ""
+    },
+    {
+      "id": "tfdcb0f",
+      "task": "Task 16: Birkeland terella aurora emulator research + design modifications",
+      "priority": "med",
+      "status": "pending",
+      "added": "2026-03-07T11:29:04.552579+00:00",
+      "context": ""
+    },
+    {
+      "id": "t81a109",
+      "task": "Task 18: Short-crucible Prime Intellect model analysis",
+      "priority": "med",
+      "status": "pending",
+      "added": "2026-03-07T11:29:04.581894+00:00",
+      "context": ""
+    },
+    {
+      "id": "tf713a0",
+      "task": "Task 19: Shannon red-team tool audit + implement + run on wireedm.com from fresh VPS",
+      "priority": "med",
+      "status": "pending",
+      "added": "2026-03-07T11:29:04.613681+00:00",
+      "context": ""
+    },
+    {
+      "id": "t790f4f",
+      "task": "Task 20: Home server plan - persistent access, OS choice, 3090 utilization",
+      "priority": "med",
+      "status": "pending",
+      "added": "2026-03-07T11:29:04.643314+00:00",
+      "context": ""
+    },
+    {
+      "id": "t53d128",
+      "task": "Task 21: mrb.sh/cognitive/ site improvements + SVG logo options",
+      "priority": "med",
+      "status": "pending",
+      "added": "2026-03-07T11:29:04.673008+00:00",
+      "context": ""
+    },
+    {
+      "id": "t1160f5",
+      "task": "Task 22: Preference learning framework - quiz or writing analysis to know G better",
+      "priority": "med",
+      "status": "pending",
+      "added": "2026-03-07T11:29:04.707252+00:00",
+      "context": ""
+    },
+    {
+      "id": "t2ade6c",
+      "task": "Task 23: SAM.GOV procurement pipeline fix - test 5 requests, audit, reimplement",
+      "priority": "med",
+      "status": "pending",
+      "added": "2026-03-07T11:29:04.736830+00:00",
+      "context": ""
+    },
+    {
+      "id": "t0c113c",
+      "task": "--help",
+      "priority": "med",
+      "status": "done",
+      "added": "2026-03-07T11:43:22.852735+00:00",
+      "context": "",
+      "completed": "2026-03-07T11:43:31.047504+00:00"
+    },
+    {
+      "id": "t044ae7",
+      "task": "TEST: verify new task system works",
+      "priority": "high",
+      "status": "done",
+      "added": "2026-03-07T11:43:22.903079+00:00",
+      "context": "testing autonomous loop improvements",
+      "completed": "2026-03-07T11:43:31.101563+00:00"
+    }
+  ]
+}
