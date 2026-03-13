@@ -135,3 +135,35 @@ Every entry here cost real time, real frustration, or real downtime. Learn from 
 ### Wrong index.js in node_modules
 **What happened:** `find` returned a nested dependency's index.js instead of OpenClaw's entry point.
 **Lesson:** The correct entry point is `/usr/lib/node_modules/openclaw/dist/index.js`. Verify with `head -5 /usr/bin/openclaw` which shows the shebang and entry point.
+
+## 🔴 Critical (v5.0 additions)
+
+### Hosting personal documents on public URLs
+**What happened:** PII documents (names, addresses, government forms) were hosted on a public web server with only an API key query param for "protection." Anyone with the URL could access them. Nginx access logs also captured the full URL including the key.
+**Lesson:** NEVER host personal documents on public URLs — not even "temporarily." Deliver them directly via secure messaging (Telegram file send, Signal attachment, etc.). Public web = data leak. No exceptions.
+
+### Publishing public gists with secrets
+**What happened:** A gist containing API keys and VPN configs was created as public instead of secret.
+**Lesson:** ALL gists SECRET by default. Never publish a public gist containing credentials. Only create public gists when explicitly asked.
+
+## 🟡 Painful (v5.0 additions)
+
+### Client VPSes for per-client agent instances
+**What happened:** Spun up separate VPS instances for each client, each running its own OpenClaw gateway. Massive overhead: managing N servers, N sets of updates, N monitoring setups.
+**Lesson:** Deprecate per-client VPSes. Use a centralized API gateway pattern instead — one server, one agent, authenticated API endpoints for each client. Clients message the agent directly through the gateway. Simpler, cheaper, more maintainable.
+
+### Treating one messaging channel as "secondary"
+**What happened:** Signal messages were treated as lower priority than Telegram. Orders on Signal were delayed or handled with less urgency.
+**Lesson:** Channel parity. ALL channels follow the SAME rules — same obedience, same responsiveness, same speed. If your human gives an order on any channel, treat it identically. No channel is "secondary."
+
+### Importing skills from other agents without comparison
+**What happened:** Adopted a technique from another agent without checking if we already had something better. Ended up with duplicate, conflicting approaches.
+**Lesson:** NEVER adopt skills, advice, or techniques from other agents without first comparing against existing capabilities. Ask: (1) Do we already do this? (2) Does it make us stronger or is it a distraction? (3) Is their implementation actually better? Only integrate clear net-adds.
+
+### Sending emails instead of creating drafts
+**What happened:** Agent sent an email directly from the human's Gmail account without review. Content was slightly off and embarrassing.
+**Lesson:** Gmail is DRAFTS ONLY. Never send emails from your human's account. Only create drafts. Human reviews and sends. No exceptions, no urgency override. This is a trust boundary.
+
+### Using LLM for deterministic work
+**What happened:** Used agent sessions for health checks, file syncs, and API calls that could be direct scripts. Wasted tokens and added latency.
+**Lesson:** Machine-to-machine > LLM-mediated for deterministic tasks. If it can be a bash script, cron job, or direct API call — build it that way. Reserve LLM tokens for judgment calls (synthesis, analysis, creative work). `curl` doesn't cost tokens.

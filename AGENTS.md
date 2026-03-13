@@ -1,28 +1,87 @@
-# AGENTS.md - Agent Guidelines
+# AGENTS.md — Core Rules
 
-This file contains operational discipline for AI agents managing the workspace.
+Home workspace. All workspace context files are already injected — NEVER re-read them with the read tool.
 
-## Task Queue Discipline (NON-NEGOTIABLE)
+## Boot
+- `restart-context.json`: if `pending: true`, follow its instructions then clear the flag
+- Gateway restarts: ALWAYS `bash scripts/restart-gateway.sh "reason"` — never bare systemctl
+- Timezone: `TZ=$(cat config/timezone.txt) date`
 
-**Before every final reply or NO_REPLY, scan the conversation for unresolved items:**
-1. Anything deferred ("I'll do this later", "once X is ready", "need to...")
-2. Anything blocked ("waiting on", "need G to...")
-3. Anything promised but not done yet
-4. New information that changes existing tasks
+## Delegation Protocol (NON-NEGOTIABLE)
+**Main thread = conversation with your human. Always available. Never blocked.**
 
-**Write it immediately:** `python3 tasks/add.py "task description"` or edit `tasks/queue.json` directly.
-**Mark done:** `python3 tasks/add.py done <task_id>` when completed.
-**No mental notes.** If it's not in the queue, it doesn't exist after compaction.
+### Auto-delegate when:
+- Task needs >2 tool calls (file reads, exec, web search, etc.)
+- Task involves building/creating something (HTML, scripts, reports, configs)
+- Task involves research (web searches, reading multiple files, analysis)
+- Task involves multi-step debugging (check logs → diagnose → fix → verify)
+- Task will take >30 seconds of tool work
+- Anything where your human might want to say something else while it runs
 
-Queue format: `tasks/queue.json` — simple JSON, zero LLM tokens to read/write.
-View: `python3 tasks/add.py list`
+### Keep inline (do NOT delegate):
+- Quick answers from memory/context ("what's the status of X?")
+- Single config edits or memory writes
+- Short replies, acknowledgments, decisions
+- Reading one small file to answer a question
+- Sending messages
 
-## Memory Write-Through
+### How:
+1. Acknowledge the request immediately (1-2 sentences)
+2. Spawn sub-agent with clear task description + all needed context
+3. Continue conversation — don't wait for completion
+4. When sub-agent completes, summarize result (don't dump raw output)
 
-After ANY exchange where you learn something durable, write it IMMEDIATELY. Don't wait for compaction.
+### Sub-agent discipline:
+- Timeouts: lookup 5m, research 10m, synthesis/build 15m
+- Max concurrent: 15 (tune based on your model/budget)
+- Task description must be self-contained (sub-agent has no conversation context)
+- Include file paths, specific instructions — sub-agent can't ask questions
+- If a sub-agent fails, retry once silently. If it fails again, tell your human.
+
+## Pipeline Auto-Processing (NON-NEGOTIABLE)
+- Process completed sub-agents immediately — don't wait for your human to ask
+- Auto-spawn next pipeline stage without waiting
+- Never sit idle with completed work
+
+## Memory
+Wake up fresh each session. Files are your continuity:
+- `MEMORY.md` — curated, max 15K chars, main session only (security)
+- `memory/YYYY-MM-DD.md` — daily logs (read on demand, not every boot)
+- `memory/entities.md`, `decisions.md`, `facts.md` — durable references
+- **Write-through:** After ANY durable learning, write IMMEDIATELY
+- **Text > Brain** — mental notes don't survive restarts
+
+## Task Queue (NON-NEGOTIABLE)
+Before every final reply, scan for unresolved items. Write immediately:
+`python3 tasks/add.py "task"` / `python3 tasks/add.py done <id>` / `python3 tasks/add.py list`
+
+## Routing (CRITICAL — Don't Leak)
+Plain-text reply routes to SENDER. For strangers:
+- Respond to them: `message(target=<their_id>)`
+- Comment to your human: `message(target="<human_chat_id>")`
+- Then: `NO_REPLY`
+
+## Efficiency
+- Machine-to-machine > LLM-mediated. Scripts > agent tasks for deterministic work.
+- Recommendation mode: ONE answer, not a comparison table.
+- Long output → gist link. Exception: human asks for detail inline.
+- Platform formatting: Discord/WhatsApp no tables; Discord links in `<>`
 
 ## Safety
+- `trash` > `rm`. When in doubt, ask.
+- Safe freely: read files, search web, work within workspace
+- Ask first: sending emails, tweets, public posts
 
-- Don't exfiltrate private data. `trash` > `rm`. When in doubt, ask.
-- **Safe freely:** Read files, search web, work within workspace
-- **Ask first:** Sending emails, tweets, public posts, anything that leaves the machine
+## Channel Parity
+All messaging channels (Telegram, Signal, SMS, etc.) follow the SAME rules:
+- Same obedience level, same responsiveness, same execution speed
+- If your human gives an order on any channel, treat it identically
+- No channel is "secondary" — verify sender identity the same way everywhere
+
+## Memory Infrastructure
+- DB health: `for db in ~/.openclaw/memory/*.sqlite; do echo "$(basename $db): $(du -h $db | cut -f1)"; done`
+- If slow or >500MB: run maintenance scripts
+- Emergency: stop gateway → run maintenance → clear locks → restart
+
+## Workspace
+All agents share ONE workspace via symlinks. New agent → `ln -s ~/.openclaw/workspace ~/.openclaw/workspace-<id>`

@@ -1,6 +1,6 @@
 #!/bin/bash
 # self-heal.sh — Auto-remediate common issues before alerting a human
-# Runs every 5 min via cron
+# Runs every 5 min via cron: */5 * * * * bash ~/bernard-bootstrap/scripts/self-heal.sh
 set -uo pipefail
 
 LOG="/tmp/self-heal.log"
@@ -10,10 +10,11 @@ log() { echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] $*" >> "$LOG"; }
 alert() {
   log "ALERT: $1"
   if [ "$ALERT_SENT" -lt 3 ]; then
-    # Telegram alert to G (fire-and-forget)
-    curl -sf -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
-      -d chat_id=39172309 \
-      -d text="🔧 Self-heal: $1" >/dev/null 2>&1 || true
+    # Send alert via your preferred channel (Telegram example below)
+    # Replace TELEGRAM_BOT_TOKEN and CHAT_ID with your values
+    # curl -sf -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+    #   -d chat_id="${OWNER_CHAT_ID}" \
+    #   -d text="🔧 Self-heal: $1" >/dev/null 2>&1 || true
     ALERT_SENT=$((ALERT_SENT + 1))
   fi
 }
@@ -42,59 +43,48 @@ if ! systemctl --user is-active openclaw-gateway >/dev/null 2>&1; then
   fi
 fi
 
-# ── Check 3: mrb-sh ──
-if ! systemctl --user is-active mrb-sh >/dev/null 2>&1; then
-  systemctl --user restart mrb-sh 2>/dev/null
-  sleep 2
-  if systemctl --user is-active mrb-sh >/dev/null 2>&1; then
-    log "Restarted mrb-sh"
-  else
-    alert "mrb-sh restart FAILED"
-  fi
-fi
+# ── Check 3: Custom services (add your own) ──
+# Uncomment and customize for your services:
+# SERVICES=("my-web-app" "my-api-service")
+# for svc in "${SERVICES[@]}"; do
+#   if ! systemctl --user is-active "$svc" >/dev/null 2>&1; then
+#     systemctl --user restart "$svc" 2>/dev/null
+#     sleep 2
+#     if systemctl --user is-active "$svc" >/dev/null 2>&1; then
+#       log "Restarted $svc"
+#     else
+#       alert "$svc restart FAILED"
+#     fi
+#   fi
+# done
 
-# ── Check 4: API Gateway ──
-if systemctl --user is-enabled api-gateway >/dev/null 2>&1; then
-  if ! curl -sf http://127.0.0.1:19000/health >/dev/null 2>&1; then
-    systemctl --user restart api-gateway 2>/dev/null
-    sleep 2
-    if curl -sf http://127.0.0.1:19000/health >/dev/null 2>&1; then
-      log "Restarted api-gateway"
-    else
-      alert "api-gateway restart FAILED"
-    fi
-  fi
-fi
+# ── Check 4: API Gateway health (if running) ──
+# Uncomment if you run a centralized API gateway:
+# API_GW_PORT=19000
+# if systemctl --user is-enabled api-gateway >/dev/null 2>&1; then
+#   if ! curl -sf "http://127.0.0.1:${API_GW_PORT}/health" >/dev/null 2>&1; then
+#     systemctl --user restart api-gateway 2>/dev/null
+#     sleep 2
+#     if curl -sf "http://127.0.0.1:${API_GW_PORT}/health" >/dev/null 2>&1; then
+#       log "Restarted api-gateway"
+#     else
+#       alert "api-gateway restart FAILED"
+#     fi
+#   fi
+# fi
 
-# ── Check 5: N-Number tracking ──
-if systemctl --user is-enabled n-number-tracking >/dev/null 2>&1; then
-  if ! systemctl --user is-active n-number-tracking >/dev/null 2>&1; then
-    systemctl --user restart n-number-tracking 2>/dev/null
-    log "Restarted n-number-tracking"
-  fi
-fi
-
-# ── Check 6: Telnyx SMS ──
-if ! systemctl --user is-active telnyx-sms >/dev/null 2>&1; then
-  systemctl --user restart telnyx-sms 2>/dev/null
-  sleep 2
-  if systemctl --user is-active telnyx-sms >/dev/null 2>&1; then
-    log "Restarted telnyx-sms"
-  else
-    alert "telnyx-sms restart FAILED"
-  fi
-fi
-
-# ── Check 7: Log rotation ──
-for logfile in /tmp/openclaw/*.log /tmp/self-heal.log /tmp/ai-news-digest.log; do
-  if [ -f "$logfile" ] && [ "$(stat -f%z "$logfile" 2>/dev/null || stat -c%s "$logfile" 2>/dev/null)" -gt 104857600 ]; then
+# ── Check 5: Log rotation ──
+for logfile in /tmp/openclaw/*.log /tmp/self-heal.log; do
+  if [ -f "$logfile" ] && [ "$(stat -c%s "$logfile" 2>/dev/null || echo 0)" -gt 104857600 ]; then
     tail -1000 "$logfile" > "${logfile}.tmp" && mv "${logfile}.tmp" "$logfile"
     log "Rotated $logfile (was >100MB)"
   fi
 done
 
-# ── Check 8: Memory (OOM prevention) ──
-MEM_AVAIL=$(awk '/MemAvailable/ {print int($2/1024)}' /proc/meminfo)
-if [ "$MEM_AVAIL" -lt 200 ]; then
-  alert "Low memory: ${MEM_AVAIL}MB available"
+# ── Check 6: Memory (OOM prevention) ──
+if [ -f /proc/meminfo ]; then
+  MEM_AVAIL=$(awk '/MemAvailable/ {print int($2/1024)}' /proc/meminfo)
+  if [ "$MEM_AVAIL" -lt 200 ]; then
+    alert "Low memory: ${MEM_AVAIL}MB available"
+  fi
 fi

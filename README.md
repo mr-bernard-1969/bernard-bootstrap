@@ -12,6 +12,7 @@ A bootstrap kit that takes a fresh OpenClaw install and gives it:
 - **Anti-patterns** — every mistake already made so your agent doesn't repeat them
 - **Persona templates** — starting points for SOUL.md, IDENTITY.md, AGENTS.md (customize to your taste)
 - **Skills manifest** — which skills to install first and how to configure them
+- **Safety scripts** — gateway restart with rollback, self-healing, hallucination watchdog
 
 ## What This Isn't
 
@@ -24,7 +25,7 @@ A bootstrap kit that takes a fresh OpenClaw install and gives it:
 ### Option A: Manual Setup (You Have a VPS Already)
 
 ```bash
-git clone https://github.com/<your-username>/bernard-bootstrap.git
+git clone https://github.com/mister-bernard/bernard-bootstrap.git
 cd bernard-bootstrap
 bash setup.sh
 ```
@@ -58,13 +59,14 @@ See `provision/README.md` for cloud provider-specific instructions (Hetzner, Dig
 ```
 bernard-bootstrap/
 ├── README.md                    ← You are here
+├── AGENTS.md                    ← Core operational rules (delegation, memory, safety)
 ├── setup.sh                     ← One-shot workspace setup
 ├── provision/
 │   ├── README.md                ← VPS provisioning guide
 │   ├── provision-vps.sh         ← Automated VPS setup script
 │   └── setup-telegram-bot.md   ← Telegram bot creation guide
 ├── templates/
-│   ├── AGENTS.md                ← Workspace rules, memory habits, efficiency principles
+│   ├── AGENTS.md                ← Full workspace rules template
 │   ├── SOUL.md                  ← Personality and core values
 │   ├── IDENTITY.md              ← Name, backstory, operational persona
 │   ├── USER.md                  ← Template for describing your human
@@ -72,12 +74,18 @@ bernard-bootstrap/
 │   └── TOOLS.md                 ← Service and integration notes
 ├── playbook/
 │   ├── memory-discipline.md         ← The #1 thing to get right
-│   ├── security.md                  ← Access control, secrets, API keys, Cloudflare, watchdogs
+│   ├── security.md                  ← Access control, secrets, gists, email, document hosting
 │   ├── communication.md             ← Speaking, routing, voice, social media, email outreach
 │   ├── error-recovery.md            ← Gateway, SSH, services, credits, webhooks, remote machines
-│   ├── anti-patterns.md             ← Every mistake already made (30+ entries)
+│   ├── anti-patterns.md             ← Every mistake already made (35+ entries)
 │   ├── subagent-orchestration.md    ← Fan-out/synthesis, pipeline state, cost awareness
 │   └── web-services.md             ← Dashboards, auth, APIs, systemd, nginx, Playwright
+├── scripts/
+│   ├── restart-gateway.sh          ← Safe gateway restart with rollback
+│   ├── self-heal.sh                ← Auto-remediate common issues
+│   ├── hallucination-watchdog.py   ← Verify file paths, URLs, env vars, memory consistency
+│   ├── checkpoint.sh               ← Quick git checkpoint
+│   └── backup-system.py            ← Workspace backup
 └── skills/
     └── manifest.md                  ← 5-phase skill installation guide
 ```
@@ -89,15 +97,37 @@ These are the most important lessons from production:
 1. **Write-through memory** — If you learn something, write it to a file immediately. "Mental notes" don't survive restarts.
 2. **Machine-to-machine first** — If a task can be a bash script or cron job, don't route it through an LLM. Reserve tokens for judgment calls.
 3. **Scripts > LLM for plumbing** — Health checks, file syncs, API calls, notifications = pure scripts. Zero LLM involvement.
-4. **System crontab for deterministic tasks** — OpenClaw cron isolated sessions have a known bug where tools may not be provided to models. Use `crontab -e` for anything that doesn't need LLM judgment.
-5. **Never auto-harden** — Always propose security changes and get approval. Never lock yourself out.
-6. **Fallback within tier** — If your primary API key runs out, fall back to another key on the same provider. Never fall back to free/incapable models.
-7. **Checkpoint before iterating** — Git commit before making changes. Tag important versions. Cheap insurance.
-8. **Groups see only final output** — No progress updates, no system messages, no errors. Deliver the finished product.
-9. **Build a hallucination watchdog** — Automate checks for stale file paths, dead URLs, missing env vars. Run daily. Your docs WILL drift from reality.
-10. **Pipelines are autonomous after trigger** — Multi-step workflows auto-continue. Never make your human manually kick the next stage.
+4. **Delegation protocol** — Main thread is for conversation. Auto-delegate any task needing >2 tool calls to a sub-agent. Never block the main thread.
+5. **Pipeline auto-continuation** — Multi-step workflows auto-continue after trigger. Never make your human manually kick the next stage.
+6. **Channel parity** — ALL messaging channels treated equally. No channel is "secondary."
+7. **Gmail drafts only** — Never send emails from your human's account. Draft only. Human reviews and sends.
+8. **Never host PII on public URLs** — Deliver personal documents directly via messaging. Never on web servers, even "temporarily."
+9. **Secret gists by default** — ALL gists are secret unless explicitly asked to be public.
+10. **Checkpoint before iterating** — Git commit before making changes. Tag important versions. Cheap insurance.
+11. **Groups see only final output** — No progress updates, no system messages, no errors. Deliver the finished product.
+12. **Build a hallucination watchdog** — Automate checks for stale file paths, dead URLs, missing env vars. Run daily. Your docs WILL drift from reality.
+13. **Skill import rule** — Never adopt skills from other agents without comparing against what you already have. Be analytical, not impressionable.
+14. **Never auto-harden** — Always propose security changes and get approval. Never lock yourself out.
+15. **Centralized gateway > per-client instances** — One server, one agent, API endpoints per client. Simpler, cheaper, more maintainable.
 
 ## Changelog
+
+### v5.0 (2026-03-13)
+- **AGENTS.md rewrite** — synced delegation protocol, pipeline auto-processing, sub-agent discipline (maxConcurrent=15), memory infrastructure patterns from production
+- **NEW: `restart-gateway.sh`** — safe gateway restart with JSON validation and auto-rollback
+- **Anti-patterns +5**: hosting PII on public URLs, public gists with secrets, per-client VPSes, channel inequality, importing skills without comparison
+- **Security +5**: Gmail drafts-only rule, never host PII publicly, secret gists by default, skill import rule, hallucination watchdog reference
+- **Key principles +6**: delegation protocol, channel parity, Gmail drafts only, no PII hosting, secret gists, skill import rule, centralized gateway
+- **Templates updated**: AGENTS.md massively expanded (delegation, pipeline, channel parity, Gmail rule, skill imports, gist security)
+- **Scripts updated**: self-heal.sh genericized (stripped private service names), restart-gateway.sh added
+- **Self-heal.sh** — now a clean template with customizable service checks (no hardcoded service names)
+
+### v4.0 (2026-03-07)
+- Added `scripts/` directory with safety tools
+- `self-heal.sh` — auto-remediate disk, gateway, services, memory issues
+- `hallucination-watchdog.py` — verify file paths, URLs, env vars, memory consistency
+- `checkpoint.sh` — quick git checkpoint with tags
+- `backup-system.py` — workspace backup utility
 
 ### v3.1 (2026-02-28)
 - **NEW: `subagent-orchestration.md`** — fan-out/synthesis, pipeline state, model selection, cost awareness

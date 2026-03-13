@@ -189,24 +189,12 @@ class HallucinationWatchdog:
                     else:
                         actual_vars.add(line.split("=", 1)[0])
         
-        # NIS .env
-        nis_env = Path.home() / "north-idaho-sunsets" / ".env"
-        if nis_env.exists():
-            for line in nis_env.read_text().splitlines():
-                line = line.strip()
-                if line and "=" in line:
-                    if line.startswith("#"):
-                        var_match = re.match(r'#\s*([A-Z][A-Z0-9_]+)=', line)
-                        if var_match:
-                            pending_vars.add(var_match.group(1))
-                    else:
-                        actual_vars.add(line.split("=", 1)[0])
-        
-        # Client env files
-        client_envs = (WORKSPACE / "clients").glob("*.env")
-        for client_env in client_envs:
-            try:
-                for line in client_env.read_text().splitlines():
+        # Additional .env files (add your project-specific paths here)
+        # Example: project_env = Path.home() / "my-project" / ".env"
+        extra_env_paths = []
+        for extra_env in extra_env_paths:
+            if extra_env.exists():
+                for line in extra_env.read_text().splitlines():
                     line = line.strip()
                     if line and "=" in line:
                         if line.startswith("#"):
@@ -215,8 +203,6 @@ class HallucinationWatchdog:
                                 pending_vars.add(var_match.group(1))
                         else:
                             actual_vars.add(line.split("=", 1)[0])
-            except:
-                pass
         
         # Session env
         for k in os.environ:
@@ -422,7 +408,8 @@ class HallucinationWatchdog:
         if "XDG_RUNTIME_DIR" not in env:
             env["XDG_RUNTIME_DIR"] = f"/run/user/{os.getuid()}"
         
-        services = ["telnyx-sms", "telnyx-voice", "mrb-sh", "channel-logger"]
+        # Add your own services here
+        services = ["openclaw-gateway"]
         for svc in services:
             result = subprocess.run(
                 ["systemctl", "--user", "is-active", svc],
