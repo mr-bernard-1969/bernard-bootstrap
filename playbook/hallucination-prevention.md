@@ -60,7 +60,7 @@ The hallucination watchdog (`scripts/hallucination-watchdog.py`) verifies agent 
 **What:** Check systemd services mentioned in TOOLS.md are running  
 **Why:** Down services mean broken integrations  
 **How:** `systemctl is-active <service>` for each  
-**Red flags:** Inactive/failed services (telnyx-sms, mrb-sh, etc.)
+**Red flags:** Inactive/failed services that should be running
 
 ## Recovery Procedures
 
