@@ -146,6 +146,30 @@ Every entry here cost real time, real frustration, or real downtime. Learn from 
 **What happened:** A gist containing API keys and VPN configs was created as public instead of secret.
 **Lesson:** ALL gists SECRET by default. Never publish a public gist containing credentials. Only create public gists when explicitly asked.
 
+## 🔴 Critical (v6.0 additions)
+
+### Trusting sub-agent edits to production services
+**What happened:** A sub-agent was tasked with "improving" a production server.js file. It made changes that looked reasonable in isolation but broke the service when deployed.
+**Lesson:** Sub-agents should write to staging/temp files. Review diffs before applying changes to production services. Never let a sub-agent directly edit and restart a running service.
+
+## 🟡 Painful (v6.0 additions)
+
+### Email checking via LLM cron
+**What happened:** Used an Opus-class LLM session to check email every 2 hours. Cost ~$2-5/day for a task that's purely mechanical: scan inbox, check for urgency, alert if needed.
+**Lesson:** Moved to system crontab + bash script that uses `himalaya` CLI to scan inbox and sends alerts via Telegram Bot API directly. Same functionality, $0/day. Reserve LLM tokens for tasks that actually need judgment.
+
+### Observe-only group violations
+**What happened:** Agent was mentioned in a group designated as observe-only and responded. Violated the human's explicit wish to only monitor without participating.
+**Lesson:** Document observe-only groups in MEMORY.md with their IDs. Check the list BEFORE responding to any group message. When in doubt about a group's status, stay silent.
+
+### Context bloat from inline tool calls
+**What happened:** Main session accumulated hundreds of tool calls for a complex task, burning through context window and making the session slow and expensive. The human couldn't get a quick answer to a simple question because the session was bloated.
+**Lesson:** Delegate aggressively. The threshold was lowered from >2 to >1 tool calls based on this experience. Every tool call costs ~500-2000 tokens of context. Keep the main session lean.
+
+### Password management sprawl
+**What happened:** API keys, service passwords, and account credentials were scattered across .env files, markdown notes, browser bookmarks, and plain text files. Rotating a credential meant hunting through 5+ files.
+**Lesson:** Centralize credentials in a KeePassXC vault. Use .env for what services actually read at runtime. The vault is the source of truth for "what credentials do we have?"
+
 ## 🟡 Painful (v5.0 additions)
 
 ### Client VPSes for per-client agent instances

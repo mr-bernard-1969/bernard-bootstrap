@@ -54,6 +54,7 @@ copy_if_missing "$SCRIPT_DIR/templates/AGENTS.md" "$WORKSPACE/AGENTS.md"
 copy_if_missing "$SCRIPT_DIR/templates/USER.md" "$WORKSPACE/USER.md"
 copy_if_missing "$SCRIPT_DIR/templates/HEARTBEAT.md" "$WORKSPACE/HEARTBEAT.md"
 copy_if_missing "$SCRIPT_DIR/templates/TOOLS.md" "$WORKSPACE/TOOLS.md"
+copy_if_missing "$SCRIPT_DIR/templates/MEMORY.md" "$WORKSPACE/MEMORY.md"
 
 # Create empty memory files
 echo ""

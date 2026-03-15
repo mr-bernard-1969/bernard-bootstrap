@@ -65,6 +65,16 @@ Before planned restarts or reboots:
 ```
 On next boot: read this, notify human, clear flag, resume work.
 
+## Scaling Memory: Operational Context System
+
+As your deployment grows, scattered markdown notes become unmanageable. See `playbook/operational-context.md` for the full pattern:
+
+1. **Phase 1:** `config/services.yaml` — encode services as structured YAML (queryable, not grep-able)
+2. **Phase 2:** Operational context loader — boot script that generates a compact summary from multiple files
+3. **Phase 3:** SQLite knowledge graph — entities, facts, relationships (for 50+ entity deployments)
+
+The key insight: **operational context should be data, not prose.** Your self-heal scripts, heartbeat checks, and port queries should all read from the same structured source.
+
 ## Common Mistakes
 
 - ❌ Writing "I'll remember that" without actually writing it down
@@ -74,3 +84,5 @@ On next boot: read this, notify human, clear flag, resume work.
 - ❌ Forgetting to read yesterday's daily note on session start
 - ❌ Loading MEMORY.md in group/public contexts
 - ❌ Storing secrets in memory files (use .env)
+- ❌ Scattering service info across markdown instead of structured config
+- ❌ Guessing at file contents before editing (always read first)

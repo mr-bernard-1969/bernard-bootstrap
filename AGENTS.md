@@ -6,17 +6,20 @@ Home workspace. All workspace context files are already injected — NEVER re-re
 - `restart-context.json`: if `pending: true`, follow its instructions then clear the flag
 - Gateway restarts: ALWAYS `bash scripts/restart-gateway.sh "reason"` — never bare systemctl
 - Timezone: `TZ=$(cat config/timezone.txt) date`
+- Active hours: check timezone, respect quiet hours (typically 23:00-08:00 local)
 
 ## Delegation Protocol (NON-NEGOTIABLE)
 **Main thread = conversation with your human. Always available. Never blocked.**
 
 ### Auto-delegate when:
-- Task needs >2 tool calls (file reads, exec, web search, etc.)
-- Task involves building/creating something (HTML, scripts, reports, configs)
+- Task needs >1 tool call beyond a quick read or exec
+- Task involves building/creating anything (HTML, scripts, reports, configs)
 - Task involves research (web searches, reading multiple files, analysis)
 - Task involves multi-step debugging (check logs → diagnose → fix → verify)
-- Task will take >30 seconds of tool work
+- Task will take >15 seconds of tool work
+- Any file edit longer than a few lines
 - Anything where your human might want to say something else while it runs
+- **Context preservation**: every tool call costs ~500-2000 tokens. Delegate aggressively to keep the main session lean.
 
 ### Keep inline (do NOT delegate):
 - Quick answers from memory/context ("what's the status of X?")
@@ -33,7 +36,7 @@ Home workspace. All workspace context files are already injected — NEVER re-re
 
 ### Sub-agent discipline:
 - Timeouts: lookup 5m, research 10m, synthesis/build 15m
-- Max concurrent: 15 (tune based on your model/budget)
+- Max concurrent: 15 (tune based on your model/budget — started at 8, raised to 15 in production)
 - Task description must be self-contained (sub-agent has no conversation context)
 - Include file paths, specific instructions — sub-agent can't ask questions
 - If a sub-agent fails, retry once silently. If it fails again, tell your human.
@@ -66,6 +69,7 @@ Plain-text reply routes to SENDER. For strangers:
 - Recommendation mode: ONE answer, not a comparison table.
 - Long output → gist link. Exception: human asks for detail inline.
 - Platform formatting: Discord/WhatsApp no tables; Discord links in `<>`
+- **Silence = healthy** — no cron or heartbeat should message your human unless something is actionable.
 
 ## Safety
 - `trash` > `rm`. When in doubt, ask.
@@ -77,6 +81,12 @@ All messaging channels (Telegram, Signal, SMS, etc.) follow the SAME rules:
 - Same obedience level, same responsiveness, same execution speed
 - If your human gives an order on any channel, treat it identically
 - No channel is "secondary" — verify sender identity the same way everywhere
+
+## Group Chat Rules
+- **Results only** — never show your work in group chats. No "let me check," no "working on it," no thinking out loud, no status updates, no tool errors, no subagent completions.
+- **Observe-only groups** — some groups your human may designate as observe-only. NEVER send anything to these groups. Not even if mentioned.
+- **Never spawn subagents from group sessions** — delegate to main session instead.
+- In groups: answer-only, no internal reasoning or chain-of-thought.
 
 ## Memory Infrastructure
 - DB health: `for db in ~/.openclaw/memory/*.sqlite; do echo "$(basename $db): $(du -h $db | cut -f1)"; done`

@@ -52,7 +52,15 @@ Human: "Research X"
 - Duplicate runs when multiple group members trigger the same thing
 - System messages visible to everyone
 
-Instead: Group session should write to a request queue or signal the main session to handle spawning.
+Instead: Group session should delegate work requests to the main session. Only the main session spawns sub-agents.
+
+## Results-Only Policy for Groups
+
+When delivering sub-agent results to a group chat:
+- **Only the final, polished output.** Never show intermediate steps.
+- No "working on it," no "let me check," no progress updates.
+- If sub-agents fail, retry silently or stay quiet. Never surface errors.
+- A fixer arrives with the answer — he doesn't narrate the investigation.
 
 ## Handling Failures
 

@@ -13,6 +13,8 @@ A bootstrap kit that takes a fresh OpenClaw install and gives it:
 - **Persona templates** — starting points for SOUL.md, IDENTITY.md, AGENTS.md (customize to your taste)
 - **Skills manifest** — which skills to install first and how to configure them
 - **Safety scripts** — gateway restart with rollback, self-healing, hallucination watchdog
+- **Operational context system** — services.yaml + query tools for managing complex deployments
+- **Password management** — KeePassXC vault pattern with mobile sync
 
 ## What This Isn't
 
@@ -71,23 +73,32 @@ bernard-bootstrap/
 │   ├── IDENTITY.md              ← Name, backstory, operational persona
 │   ├── USER.md                  ← Template for describing your human
 │   ├── HEARTBEAT.md             ← Periodic check configuration
-│   └── TOOLS.md                 ← Service and integration notes
+│   ├── TOOLS.md                 ← Service and integration notes
+│   └── MEMORY.md               ← Memory architecture template
 ├── playbook/
 │   ├── memory-discipline.md         ← The #1 thing to get right
 │   ├── security.md                  ← Access control, secrets, gists, email, document hosting
 │   ├── communication.md             ← Speaking, routing, voice, social media, email outreach
 │   ├── error-recovery.md            ← Gateway, SSH, services, credits, webhooks, remote machines
-│   ├── anti-patterns.md             ← Every mistake already made (35+ entries)
+│   ├── anti-patterns.md             ← Every mistake already made (40+ entries)
 │   ├── subagent-orchestration.md    ← Fan-out/synthesis, pipeline state, cost awareness
-│   └── web-services.md             ← Dashboards, auth, APIs, systemd, nginx, Playwright
+│   ├── hallucination-prevention.md  ← 7-dimension watchdog, self-verifying workflows
+│   ├── web-services.md             ← Dashboards, auth, APIs, systemd, nginx, Playwright
+│   ├── vps-provisioning.md         ← Step-by-step VPS setup guide
+│   ├── operational-context.md       ← Services.yaml, knowledge graph, query tools
+│   └── password-management.md       ← KeePassXC vault + mobile sync pattern
 ├── scripts/
 │   ├── restart-gateway.sh          ← Safe gateway restart with rollback
 │   ├── self-heal.sh                ← Auto-remediate common issues
 │   ├── hallucination-watchdog.py   ← Verify file paths, URLs, env vars, memory consistency
 │   ├── checkpoint.sh               ← Quick git checkpoint
-│   └── backup-system.py            ← Workspace backup
-└── skills/
-    └── manifest.md                  ← 5-phase skill installation guide
+│   ├── backup-system.py            ← Workspace backup
+│   └── emergency-contact.sh        ← Multi-channel emergency notification
+├── skills/
+│   └── manifest.md                  ← 5-phase skill installation guide
+└── tasks/
+    ├── add.py                       ← Task queue management (zero LLM tokens)
+    └── queue.json                   ← Active task queue
 ```
 
 ## Key Principles
@@ -97,20 +108,41 @@ These are the most important lessons from production:
 1. **Write-through memory** — If you learn something, write it to a file immediately. "Mental notes" don't survive restarts.
 2. **Machine-to-machine first** — If a task can be a bash script or cron job, don't route it through an LLM. Reserve tokens for judgment calls.
 3. **Scripts > LLM for plumbing** — Health checks, file syncs, API calls, notifications = pure scripts. Zero LLM involvement.
-4. **Delegation protocol** — Main thread is for conversation. Auto-delegate any task needing >2 tool calls to a sub-agent. Never block the main thread.
-5. **Pipeline auto-continuation** — Multi-step workflows auto-continue after trigger. Never make your human manually kick the next stage.
-6. **Channel parity** — ALL messaging channels treated equally. No channel is "secondary."
-7. **Gmail drafts only** — Never send emails from your human's account. Draft only. Human reviews and sends.
-8. **Never host PII on public URLs** — Deliver personal documents directly via messaging. Never on web servers, even "temporarily."
-9. **Secret gists by default** — ALL gists are secret unless explicitly asked to be public.
-10. **Checkpoint before iterating** — Git commit before making changes. Tag important versions. Cheap insurance.
-11. **Groups see only final output** — No progress updates, no system messages, no errors. Deliver the finished product.
-12. **Build a hallucination watchdog** — Automate checks for stale file paths, dead URLs, missing env vars. Run daily. Your docs WILL drift from reality.
-13. **Skill import rule** — Never adopt skills from other agents without comparing against what you already have. Be analytical, not impressionable.
-14. **Never auto-harden** — Always propose security changes and get approval. Never lock yourself out.
-15. **Centralized gateway > per-client instances** — One server, one agent, API endpoints per client. Simpler, cheaper, more maintainable.
+4. **Delegation protocol** — Main thread is for conversation. Auto-delegate any task needing >1 tool call to a sub-agent. Never block the main thread.
+5. **Context preservation** — Every tool call costs ~500-2000 tokens. Delegate aggressively to keep the main session lean and responsive.
+6. **Pipeline auto-continuation** — Multi-step workflows auto-continue after trigger. Never make your human manually kick the next stage.
+7. **Channel parity** — ALL messaging channels treated equally. No channel is "secondary."
+8. **Gmail drafts only** — Never send emails from your human's account. Draft only. Human reviews and sends.
+9. **Never host PII on public URLs** — Deliver personal documents directly via messaging. Never on web servers, even "temporarily."
+10. **Secret gists by default** — ALL gists are secret unless explicitly asked to be public.
+11. **Checkpoint before iterating** — Git commit before making changes. Tag important versions. Cheap insurance.
+12. **Groups see only final output** — No progress updates, no system messages, no errors. Deliver the finished product.
+13. **Build a hallucination watchdog** — Automate checks for stale file paths, dead URLs, missing env vars. Run daily. Your docs WILL drift from reality.
+14. **Skill import rule** — Never adopt skills from other agents without comparing against what you already have. Be analytical, not impressionable.
+15. **Never auto-harden** — Always propose security changes and get approval. Never lock yourself out.
+16. **Centralized gateway > per-client instances** — One server, one agent, API endpoints per client. Simpler, cheaper, more maintainable.
+17. **Operational context as data** — Encode your service topology in YAML/SQLite, not scattered markdown. Query it, don't grep for it.
+18. **Silence = healthy** — No cron or heartbeat should message your human unless something is actionable. If everything is fine, say nothing.
+19. **Trash > rm** — Use `trash` instead of `rm` for everything. Recoverable beats gone forever.
+20. **Read before edit** — Never guess at file contents or anchor text. Always read the file first. Duplicate edits cause ugly failures.
 
 ## Changelog
+
+### v6.0 (2026-03-15)
+- **NEW: `templates/MEMORY.md`** — Memory architecture template with file hierarchy, knowledge graph patterns, operational context system
+- **NEW: `playbook/operational-context.md`** — Services.yaml pattern for encoding service topology as queryable data instead of scattered markdown
+- **NEW: `playbook/password-management.md`** — KeePassXC vault pattern with mobile sync (Syncthing + SyncTrain + Strongbox)
+- **NEW: `scripts/emergency-contact.sh`** — Multi-channel emergency notification with severity classes
+- **AGENTS.md hardened** — Delegation threshold lowered from >2 to >1 tool calls (production lesson: delegate more aggressively for context preservation), active hours concept, context preservation rationale
+- **Security playbook expanded** — Routing rules for group vs DM contexts, observe-only group patterns, passphrase auth refinements, PII protection strengthened
+- **Anti-patterns +5**: email-check-via-LLM (moved to system cron), observe-only group violations, context bloat from inline tool calls, trusting sub-agent edits to production services, password management sprawl
+- **Memory discipline updated** — Knowledge graph pattern (SQLite entities/facts/relationships), services.yaml + query tools, operational context loader
+- **Communication updated** — Results-only policy for groups, observe-only group concept, business identity patterns
+- **Templates updated** — HEARTBEAT.md with comprehensive service/cron/lead health checks, TOOLS.md with password management and memory search sections, AGENTS.md with context preservation and active hours
+- **Hallucination watchdog** — Added service health checks, expanded command verification
+- **Self-heal.sh** — Added memory/OOM checks, log rotation, API gateway health
+- **Task queue** — Sanitized example queue, added ROI-based prioritization mention
+- **Engineering principles** — "Silence = healthy" rule, email-check cron migration pattern, operational context as data
 
 ### v5.0 (2026-03-13)
 - **AGENTS.md rewrite** — synced delegation protocol, pipeline auto-processing, sub-agent discipline (maxConcurrent=15), memory infrastructure patterns from production

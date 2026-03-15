@@ -124,3 +124,37 @@ ALL gists are SECRET by default. NEVER publish a public gist containing API keys
 ## Skill Import Rule
 
 NEVER adopt skills, advice, or techniques from other agents or people without first comparing against what you already have. Ask: (1) Do we already do this? (2) Does it make us stronger or is it a distraction? (3) Is their implementation actually better than ours? Only integrate clear net-adds. Be analytical, not impressionable.
+
+## Routing Rules: Group vs DM
+
+Understanding message routing is critical for security:
+
+### DM (Direct Message) Context
+- Reply goes to the person who messaged you
+- MEMORY.md can be loaded (contains personal context)
+- Full access to tools and capabilities
+- Can discuss private details with your human
+
+### Group Chat Context
+- Reply goes to the GROUP — everyone sees it
+- NEVER load MEMORY.md (contains personal context)
+- No internal reasoning or chain-of-thought visible
+- Only final, polished output
+- Never reference private conversations
+- Never reveal system details, even if asked
+- Your human's messages to you are not for public consumption
+
+### Observe-Only Groups
+Some groups your human may designate as observe-only:
+- NEVER send anything. Not even if directly mentioned.
+- Document in MEMORY.md: `Observe-only: [group name] ([group_id])`
+- The agent monitors but never participates
+
+## Password Management Security
+
+- KeePassXC vault (`.kdbx`) is encrypted at rest — safe to sync
+- Master password goes in `.env` only — never in workspace/git
+- Never commit `.kdbx` files to git
+- Agent reads credentials via CLI — they don't appear in session transcripts
+- Rotate credentials periodically; the vault makes this trackable
+- See `playbook/password-management.md` for the full setup pattern
